@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jsdom": "^27.4.0"
+    "jsdom": "^20.0.3"
   }
 }

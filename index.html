@@ -1,15 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Within Test</title>
+  <title>nwsapi :focus-within Bug Test</title>
 </head>
 <body>
-    <div id="container">
-        <div id="parent">
-            <input id="input" type="text" />
-        </div>
-    </div>
+  <div id="container" style="padding: 20px; border: 2px solid blue;">
+    <label>Container (should match :focus-within when input is focused)</label>
+    <input id="field" type="text" placeholder="Click here to focus">
+  </div>
+
+  <script>
+    const container = document.getElementById('container');
+    const field = document.getElementById('field');
+
+    // Focus the input field
+    field.focus();
+
+    // Test 1: Check if container matches :focus-within
+    const containerMatchesInBrowser = container.matches(':focus-within');
+    console.log('Container matches :focus-within:', containerMatchesInBrowser);
+    // Expected: true
+    // Actual in nwsapi 2.2.23: false ❌
+
+    // Test 2: querySelector should find the container
+    const foundContainer = document.querySelector('#container:focus-within');
+    console.log('querySelector found container:', foundContainer !== null);
+    // Expected: true
+    // Actual in nwsapi 2.2.23: false ❌
+
+    // Test 3: The focused element itself should match (this works even in buggy nwsapi)
+    const fieldMatches = field.matches(':focus-within');
+    console.log('Field matches :focus-within:', fieldMatches);
+    // Expected: true
+    // Actual in nwsapi 2.2.23: true ✓
+
+    // Display results
+    document.body.innerHTML += `
+      <h2>Test Results:</h2>
+      <ul>
+        <li>Container matches :focus-within: <strong>${containerMatchesInBrowser ? '✅ PASS' : '❌ FAIL'}</strong></li>
+        <li>querySelector found container: <strong>${foundContainer !== null ? '✅ PASS' : '❌ FAIL'}</strong></li>
+        <li>Field matches :focus-within: <strong>${fieldMatches ? '✅ PASS' : '❌ FAIL'}</strong></li>
+      </ul>
+      <p><em>In a real browser, all three should be ✅ PASS</em></p>
+      <p><em>In nwsapi 2.2.23 (via jsdom), the first two are ❌ FAIL</em></p>
+    `;
+  </script>
 </body>
 </html>
+

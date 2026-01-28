@@ -1,36 +1,53 @@
-/**
- * Test to showcase how jsdom handles the :focus-within selector.
- * This test loads an HTML document with focusable elements, focuses an input,
- * and then queries for elements matching :focus-within.
- */
+const { JSDOM } = require("jsdom");
 
-const fs = require('fs');
-const path = require('path');
-const { JSDOM } = require('jsdom');
+const dom = new JSDOM(`
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="container">
+    <input id="field" type="text" />
+  </div>
+</body>
+</html>
+`);
 
-// Load the HTML file
-const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf-8');
-
-// Create a JSDOM instance
-const dom = new JSDOM(html);
 const { document } = dom.window;
-
-// Test :focus-within selector
-console.log('Testing :focus-within selector...');
-
-const input = document.getElementById('input');
-const parent = document.getElementById('parent');
+const container = document.getElementById('container');
+const field = document.getElementById('field');
 
 // Focus the input
-input.focus();
+field.focus();
 
-// Check if parent has focus-within
-const hasFocusWithin = parent.matches(':focus-within');
-console.log(`Parent matches ':focus-within': ${hasFocusWithin}`);
+console.log('=== nwsapi :focus-within Bug Reproduction ===\n');
 
-// Query selector to find elements with focus-within
-const elementsWithFocusWithin = document.querySelectorAll(':focus-within');
-console.log(`Elements matching ':focus-within': ${elementsWithFocusWithin.length}`);
-elementsWithFocusWithin.forEach((el, i) => {
-    console.log(`  ${i + 1}. ${el.tagName}${el.id ? '#' + el.id : ''}`);
-});
+// Test 1: Element.prototype.matches()
+const test1 = container.matches(':focus-within');
+console.log('Test 1: container.matches(":focus-within")');
+console.log('  Expected: true');
+console.log(`  Actual:   ${test1}`);
+console.log(`  Status:   ${test1 ? '✅ PASS' : '❌ FAIL'}\n`);
+
+// Test 2: querySelector with :focus-within
+const test2 = document.querySelector('#container:focus-within');
+console.log('Test 2: document.querySelector("#container:focus-within")');
+console.log('  Expected: <div id="container">');
+console.log(`  Actual:   ${test2 ? test2.outerHTML : 'null'}`);
+console.log(`  Status:   ${test2 !== null ? '✅ PASS' : '❌ FAIL'}\n`);
+
+// Test 3: querySelectorAll with :focus-within
+const test3 = document.querySelectorAll(':focus-within');
+console.log('Test 3: document.querySelectorAll(":focus-within")');
+console.log('  Expected: NodeList with container and field (length: 2)');
+console.log(`  Actual:   NodeList length: ${test3.length}`);
+console.log(`  Status:   ${test3.length === 2 ? '✅ PASS' : '❌ FAIL'}\n`);
+
+// Test 4: The focused element itself (this should work even in buggy version)
+const test4 = field.matches(':focus-within');
+console.log('Test 4: field.matches(":focus-within") [control test]');
+console.log('  Expected: true');
+console.log(`  Actual:   ${test4}`);
+console.log(`  Status:   ${test4 ? '✅ PASS' : '❌ FAIL'}\n`);
+
+console.log('=== Summary ===');
+console.log('In a real browser or with fixed nwsapi: All tests PASS ✅');
+console.log('In nwsapi 2.2.23: Tests 1-3 FAIL, only Test 4 PASSES ❌');
