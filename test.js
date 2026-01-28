@@ -1,3 +1,9 @@
+/**
+ * Test to showcase how jsdom handles the :focus-within selector.
+ * This test loads an HTML document with focusable elements, focuses an input,
+ * and then queries for elements matching :focus-within.
+ */
+
 const fs = require('fs');
 const path = require('path');
 const { JSDOM } = require('jsdom');

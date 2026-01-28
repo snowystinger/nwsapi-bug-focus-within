@@ -2,7 +2,6 @@
   "name": "nwsapi-bug-focus-within",
   "version": "1.0.0",
   "description": "Showcases difference between browser and nwsapi implementation of contains(':focus-within')",
-  "main": "index.js",
   "scripts": {
     "test": "node test.js"
   },
