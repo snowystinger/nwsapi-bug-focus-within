@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Showcases difference between browser and nwsapi implementation of contains(':focus-within')",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js && node shadow-root-test.js"
   },
   "keywords": [],
   "author": "",
