@@ -37,9 +37,9 @@ console.log(`  Status:   ${test2 !== null ? '✅ PASS' : '❌ FAIL'}\n`);
 // Test 3: querySelectorAll with :focus-within
 const test3 = document.querySelectorAll(':focus-within');
 console.log('Test 3: document.querySelectorAll(":focus-within")');
-console.log('  Expected: NodeList with container and field (length: 2)');
+console.log('  Expected: NodeList with container and field (length: 4)');
 console.log(`  Actual:   NodeList length: ${test3.length}`);
-console.log(`  Status:   ${test3.length === 2 ? '✅ PASS' : '❌ FAIL'}\n`);
+console.log(`  Status:   ${test3.length === 4 ? '✅ PASS' : '❌ FAIL'}\n`);
 
 // Test 4: The focused element itself (this should work even in buggy version)
 const test4 = field.matches(':focus-within');

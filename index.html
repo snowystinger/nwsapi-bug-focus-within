@@ -28,7 +28,13 @@
     // Expected: true
     // Actual in nwsapi 2.2.23: false ❌
 
-    // Test 3: The focused element itself should match (this works even in buggy nwsapi)
+    // Test 3: querySelectorAll should find both container and field
+    const allFocusWithin = document.querySelectorAll(':focus-within');
+    console.log('querySelectorAll :focus-within length:', allFocusWithin.length);
+    // Expected: 4 (container and field + body and html)
+    // Actual in nwsapi 2.2.23: 1 ❌
+
+    // Test 4: The focused element itself should match (this works even in buggy nwsapi)
     const fieldMatches = field.matches(':focus-within');
     console.log('Field matches :focus-within:', fieldMatches);
     // Expected: true
@@ -40,10 +46,11 @@
       <ul>
         <li>Container matches :focus-within: <strong>${containerMatchesInBrowser ? '✅ PASS' : '❌ FAIL'}</strong></li>
         <li>querySelector found container: <strong>${foundContainer !== null ? '✅ PASS' : '❌ FAIL'}</strong></li>
+        <li>querySelectorAll :focus-within length: <strong>${allFocusWithin.length === 4 ? '✅ PASS' : '❌ FAIL'}</strong></li>
         <li>Field matches :focus-within: <strong>${fieldMatches ? '✅ PASS' : '❌ FAIL'}</strong></li>
       </ul>
-      <p><em>In a real browser, all three should be ✅ PASS</em></p>
-      <p><em>In nwsapi 2.2.23 (via jsdom), the first two are ❌ FAIL</em></p>
+      <p><em>In a real browser, all four should be ✅ PASS</em></p>
+      <p><em>In nwsapi 2.2.23 (via jsdom), the first three are ❌ FAIL</em></p>
     `;
   </script>
 </body>
